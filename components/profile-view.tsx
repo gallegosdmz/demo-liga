@@ -5,8 +5,10 @@ import { useAuth } from "@/contexts/auth-context"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { mockTeams, mockTournaments, mockPlayerStats } from "@/lib/mock-data"
+import { mockTeams, mockTournaments, mockPlayerStats, mockPlayerProfile } from "@/lib/mock-data"
 import { User, Edit, Shield, Star, Heart, Trophy, Users, BarChart3, Settings, LogOut } from "lucide-react"
+import { PlayerProfileCard } from "./player-profile-card"
+import { PlayerBadgesSystem } from "./player-badges-system"
 
 export function ProfileView() {
   const { user, logout } = useAuth()
@@ -111,6 +113,43 @@ export function ProfileView() {
 
   const userStats = getUserStats()
   const UserTypeIcon = getUserTypeIcon()
+
+  // Si el usuario es un jugador, mostrar el perfil estilo FIFA
+  if (user?.type === "player") {
+    return (
+      <div className="space-y-8">
+        {/* Header */}
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div>
+            <h1 className="text-3xl font-bold text-foreground">Mi Perfil</h1>
+            <p className="text-muted-foreground">Tu perfil de jugador profesional</p>
+          </div>
+          <div className="flex gap-2">
+            <Button variant="outline" onClick={() => setIsEditing(!isEditing)}>
+              <Edit className="h-4 w-4 mr-2" />
+              {isEditing ? "Cancelar" : "Editar Perfil"}
+            </Button>
+            <Button variant="outline" onClick={logout}>
+              <LogOut className="h-4 w-4 mr-2" />
+              Cerrar Sesión
+            </Button>
+          </div>
+        </div>
+
+        {/* Card de Perfil Estilo FIFA */}
+        <PlayerProfileCard profile={mockPlayerProfile} />
+
+        {/* Sistema de Badges */}
+        <div className="space-y-4">
+          <div>
+            <h2 className="text-2xl font-bold text-foreground mb-2">Mis Logros</h2>
+            <p className="text-muted-foreground">Colecciona badges y demuestra tu talento en el campo</p>
+          </div>
+          <PlayerBadgesSystem />
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="space-y-6">

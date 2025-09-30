@@ -1,7 +1,8 @@
 "use client"
 
 import { useState } from "react"
-import { Trophy, Users, Calendar, BarChart3, User, Menu, X } from "lucide-react"
+import { Trophy, Users, Calendar, BarChart3, User, Menu, X, Activity } from "lucide-react"
+import { LigaLogo } from "@/components/liga-logo"
 import { Button } from "@/components/ui/button"
 
 interface MobileNavProps {
@@ -13,6 +14,7 @@ export function MobileNav({ currentView, onViewChange }: MobileNavProps) {
   const [isOpen, setIsOpen] = useState(false)
 
   const navItems = [
+    { id: "dashboard", label: "Dashboard", icon: Activity },
     { id: "tournaments", label: "Torneos", icon: Trophy },
     { id: "teams", label: "Equipos", icon: Users },
     { id: "calendar", label: "Calendario", icon: Calendar },
@@ -26,8 +28,8 @@ export function MobileNav({ currentView, onViewChange }: MobileNavProps) {
       <header className="md:hidden bg-card border-b border-border sticky top-0 z-50">
         <div className="flex items-center justify-between p-4">
           <div className="flex items-center gap-2">
-            <Trophy className="h-6 w-6 text-primary" />
-            <span className="font-bold text-foreground">SportsTournament</span>
+            <LigaLogo size="md" className="text-primary" />
+            <span className="font-bold text-foreground">LIGA+</span>
           </div>
           <Button variant="ghost" size="sm" onClick={() => setIsOpen(!isOpen)}>
             {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}

@@ -6,6 +6,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { mockPlayerStats, mockTeams, mockUsers, mockTournaments, mockMatches } from "@/lib/mock-data"
 import { Trophy, Target, TrendingUp, Award, User } from "lucide-react"
+import { PlayerStatsView } from "./player-stats-view"
+import { CoachStatsView } from "./coach-stats-view"
+import { LeagueAnalysisView } from "./league-analysis-view"
 
 export function StatsView() {
   const { user } = useAuth()
@@ -74,6 +77,21 @@ export function StatsView() {
   const teamStats = getTeamStats()
   const userStats = getUserStats()
 
+  // Si el usuario es un jugador, mostrar las estadísticas detalladas estilo FIFA
+  if (user?.type === "player") {
+    return <PlayerStatsView />
+  }
+
+  // Si el usuario es un entrenador, mostrar las estadísticas avanzadas de entrenador
+  if (user?.type === "coach") {
+    return <CoachStatsView />
+  }
+
+  // Si el usuario es un dueño, mostrar el análisis de liga
+  if (user?.type === "owner") {
+    return <LeagueAnalysisView />
+  }
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -113,30 +131,7 @@ export function StatsView() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            {user?.type === "player" && typeof userStats === "object" && "goals" in userStats ? (
-              <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-                <div className="text-center">
-                  <p className="text-2xl font-bold text-primary">{userStats.goals}</p>
-                  <p className="text-sm text-muted-foreground">Goles</p>
-                </div>
-                <div className="text-center">
-                  <p className="text-2xl font-bold text-primary">{userStats.assists}</p>
-                  <p className="text-sm text-muted-foreground">Asistencias</p>
-                </div>
-                <div className="text-center">
-                  <p className="text-2xl font-bold text-yellow-600">{userStats.yellowCards}</p>
-                  <p className="text-sm text-muted-foreground">T. Amarillas</p>
-                </div>
-                <div className="text-center">
-                  <p className="text-2xl font-bold text-red-600">{userStats.redCards}</p>
-                  <p className="text-sm text-muted-foreground">T. Rojas</p>
-                </div>
-                <div className="text-center">
-                  <p className="text-2xl font-bold text-primary">{userStats.minutesPlayed}</p>
-                  <p className="text-sm text-muted-foreground">Minutos</p>
-                </div>
-              </div>
-            ) : user?.type === "coach" && typeof userStats === "object" && "teams" in userStats ? (
+            {user && user.type === "fan" && typeof userStats === "object" && "teams" in userStats ? (
               <div className="grid grid-cols-2 md:grid-cols-6 gap-4">
                 <div className="text-center">
                   <p className="text-2xl font-bold text-primary">{userStats.teams}</p>

@@ -3,23 +3,25 @@
 import { useState } from "react"
 import { useAuth } from "@/contexts/auth-context"
 import { MobileNav } from "@/components/mobile-nav"
+import { DashboardView } from "@/components/dashboard-view"
 import { TournamentsView } from "@/components/tournaments-view"
 import { TeamsView } from "@/components/teams-view"
 import { CalendarView } from "@/components/calendar-view"
 import { StatsView } from "@/components/stats-view"
 import { ProfileView } from "@/components/profile-view"
 import { Button } from "@/components/ui/button"
-import { Trophy, LogOut } from "lucide-react"
+import { Trophy, LogOut, Activity } from "lucide-react"
+import { LigaLogo } from "@/components/liga-logo"
 
 export default function DashboardPage() {
   const { user, logout } = useAuth()
-  const [currentView, setCurrentView] = useState("tournaments")
+  const [currentView, setCurrentView] = useState("dashboard")
 
   if (!user) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center">
-          <Trophy className="h-16 w-16 text-primary mx-auto mb-4" />
+          <LigaLogo size="xl" className="text-primary mx-auto mb-4" />
           <h2 className="text-2xl font-bold mb-2">Acceso Requerido</h2>
           <p className="text-muted-foreground mb-4">Debes iniciar sesión para acceder al dashboard</p>
           <Button onClick={() => (window.location.href = "/")}>Ir al Inicio</Button>
@@ -30,6 +32,8 @@ export default function DashboardPage() {
 
   const renderCurrentView = () => {
     switch (currentView) {
+      case "dashboard":
+        return <DashboardView />
       case "tournaments":
         return <TournamentsView />
       case "teams":
@@ -41,7 +45,7 @@ export default function DashboardPage() {
       case "profile":
         return <ProfileView />
       default:
-        return <TournamentsView />
+        return <DashboardView />
     }
   }
 
@@ -54,8 +58,7 @@ export default function DashboardPage() {
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <Trophy className="h-8 w-8 text-primary" />
-              <h1 className="text-2xl font-bold text-foreground">SportsTournament</h1>
+              <LigaLogo size="2xl" className="text-primary" />
             </div>
             <div className="flex items-center gap-4">
               <span className="text-sm text-muted-foreground">
@@ -75,6 +78,7 @@ export default function DashboardPage() {
         <div className="container mx-auto px-4">
           <div className="flex space-x-8">
             {[
+              { id: "dashboard", label: "Dashboard" },
               { id: "tournaments", label: "Torneos" },
               { id: "teams", label: "Equipos" },
               { id: "calendar", label: "Calendario" },

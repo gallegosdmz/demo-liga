@@ -7,6 +7,7 @@ import { useAuth } from "@/contexts/auth-context"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Trophy, Users, Calendar, BarChart3, User, Shield, Star, Heart, Loader2 } from "lucide-react"
+import { LigaLogo } from "@/components/liga-logo"
 import { useRouter } from "next/navigation"
 
 export default function HomePage() {
@@ -35,8 +36,8 @@ export default function HomePage() {
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <Trophy className="h-8 w-8 text-primary" />
-              <h1 className="text-2xl font-bold text-foreground">SportsTournament</h1>
+              <LigaLogo size="lg" className="text-primary" />
+              <h1 className="text-2xl font-bold text-foreground">LIGA+</h1>
             </div>
             <div className="flex gap-2">
               <Button variant="outline" onClick={() => setCurrentView("login")}>
@@ -78,7 +79,7 @@ export default function HomePage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <Card className="text-center hover:shadow-lg transition-shadow">
               <CardHeader>
-                <Trophy className="h-12 w-12 text-primary mx-auto mb-4" />
+                <LigaLogo size="xl" className="text-primary mx-auto mb-4" />
                 <CardTitle>Torneos</CardTitle>
               </CardHeader>
               <CardContent>
@@ -171,10 +172,10 @@ export default function HomePage() {
       <footer className="bg-card border-t border-border py-8">
         <div className="container mx-auto px-4 text-center">
           <div className="flex items-center justify-center gap-2 mb-4">
-            <Trophy className="h-6 w-6 text-primary" />
-            <span className="text-lg font-semibold text-foreground">SportsTournament</span>
+            <LigaLogo size="md" className="text-primary" />
+            <span className="text-lg font-semibold text-foreground">LIGA+</span>
           </div>
-          <p className="text-muted-foreground">© 2024 SportsTournament. Todos los derechos reservados.</p>
+          <p className="text-muted-foreground">© 2024 LIGA+. Todos los derechos reservados.</p>
         </div>
       </footer>
     </div>
@@ -205,8 +206,8 @@ function LoginView({ onBack, onRegister }: { onBack: () => void; onRegister: () 
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
           <div className="flex items-center justify-center gap-2 mb-4">
-            <Trophy className="h-8 w-8 text-primary" />
-            <span className="text-2xl font-bold">SportsTournament</span>
+            <LigaLogo size="lg" className="text-primary" />
+            <span className="text-2xl font-bold">LIGA+</span>
           </div>
           <CardTitle>Iniciar Sesión</CardTitle>
           <CardDescription>Accede a tu cuenta para gestionar torneos</CardDescription>
@@ -294,8 +295,8 @@ function RegisterView({ onBack, onLogin }: { onBack: () => void; onLogin: () => 
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
           <div className="flex items-center justify-center gap-2 mb-4">
-            <Trophy className="h-8 w-8 text-primary" />
-            <span className="text-2xl font-bold">SportsTournament</span>
+            <LigaLogo size="lg" className="text-primary" />
+            <span className="text-2xl font-bold">LIGA+</span>
           </div>
           <CardTitle>Crear Cuenta</CardTitle>
           <CardDescription>Únete a la comunidad deportiva</CardDescription>

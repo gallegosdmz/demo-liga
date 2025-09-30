@@ -8,7 +8,7 @@ import { AuthProvider } from "@/contexts/auth-context"
 import "./globals.css"
 
 export const metadata: Metadata = {
-  title: "SportsTournament - Gestión de Torneos Deportivos",
+  title: "LIGA+ - Gestión de Torneos Deportivos",
   description: "Plataforma completa para gestionar torneos deportivos, equipos y estadísticas",
   generator: "v0.app",
 }
