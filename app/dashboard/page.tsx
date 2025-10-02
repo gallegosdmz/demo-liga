@@ -9,6 +9,7 @@ import { TeamsView } from "@/components/teams-view"
 import { CalendarView } from "@/components/calendar-view"
 import { StatsView } from "@/components/stats-view"
 import { ProfileView } from "@/components/profile-view"
+import { RetasMapView } from "@/components/retas-map-view"
 import { Button } from "@/components/ui/button"
 import { Trophy, LogOut, Activity } from "lucide-react"
 import { LigaLogo } from "@/components/liga-logo"
@@ -33,7 +34,7 @@ export default function DashboardPage() {
   const renderCurrentView = () => {
     switch (currentView) {
       case "dashboard":
-        return <DashboardView />
+        return <DashboardView onViewChange={setCurrentView} />
       case "tournaments":
         return <TournamentsView />
       case "teams":
@@ -44,8 +45,10 @@ export default function DashboardPage() {
         return <StatsView />
       case "profile":
         return <ProfileView />
+      case "retas":
+        return <RetasMapView />
       default:
-        return <DashboardView />
+        return <DashboardView onViewChange={setCurrentView} />
     }
   }
 
@@ -82,6 +85,7 @@ export default function DashboardPage() {
               { id: "tournaments", label: "Torneos" },
               { id: "teams", label: "Equipos" },
               { id: "calendar", label: "Calendario" },
+              { id: "retas", label: "Retas" },
               { id: "stats", label: "Estadísticas" },
               { id: "profile", label: "Perfil" },
             ].map((item) => (

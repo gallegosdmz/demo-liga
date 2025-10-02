@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { Trophy, Users, Calendar, BarChart3, User, Menu, X, Activity } from "lucide-react"
+import { Trophy, Users, Calendar, BarChart3, User, Menu, X, Activity, Map } from "lucide-react"
 import { LigaLogo } from "@/components/liga-logo"
 import { Button } from "@/components/ui/button"
 
@@ -18,6 +18,7 @@ export function MobileNav({ currentView, onViewChange }: MobileNavProps) {
     { id: "tournaments", label: "Torneos", icon: Trophy },
     { id: "teams", label: "Equipos", icon: Users },
     { id: "calendar", label: "Calendario", icon: Calendar },
+    { id: "retas", label: "Retas", icon: Map },
     { id: "stats", label: "Estadísticas", icon: BarChart3 },
     { id: "profile", label: "Perfil", icon: User },
   ]

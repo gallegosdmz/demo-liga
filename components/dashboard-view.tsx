@@ -18,7 +18,8 @@ import {
   User,
   CheckCircle,
   AlertCircle,
-  Play
+  Play,
+  Map
 } from "lucide-react"
 import { 
   coachDashboardData, 
@@ -42,10 +43,15 @@ const iconMap = {
   User,
   CheckCircle,
   AlertCircle,
-  Play
+  Play,
+  Map
 }
 
-export function DashboardView() {
+interface DashboardViewProps {
+  onViewChange?: (view: string) => void
+}
+
+export function DashboardView({ onViewChange }: DashboardViewProps) {
   const { user } = useAuth()
 
   if (!user) return null
@@ -278,8 +284,11 @@ export function DashboardView() {
                     variant="outline"
                     className="h-auto p-4 justify-start text-left"
                     onClick={() => {
-                      // Aquí se podría implementar la navegación
-                      console.log(`Action: ${action.action}`)
+                      if (onViewChange) {
+                        onViewChange(action.action)
+                      } else {
+                        console.log(`Action: ${action.action}`)
+                      }
                     }}
                   >
                     <div className="flex items-start gap-3">

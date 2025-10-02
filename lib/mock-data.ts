@@ -3207,6 +3207,13 @@ export const playerDashboardData: DashboardStats = {
       description: "Ver calendario de partidos",
       icon: "Calendar",
       action: "calendar"
+    },
+    {
+      id: "4",
+      title: "Buscar Retas",
+      description: "Encontrar partidos amistosos",
+      icon: "Map",
+      action: "retas"
     }
   ]
 }
@@ -3264,6 +3271,663 @@ export const fanDashboardData: DashboardStats = {
       description: "Ver estadísticas de liga",
       icon: "BarChart3",
       action: "stats"
+    },
+    {
+      id: "4",
+      title: "Buscar Retas",
+      description: "Ver partidos amistosos",
+      icon: "Map",
+      action: "retas"
     }
   ]
 }
+
+// Interfaces para canchas y retas
+export interface Court {
+  id: string
+  name: string
+  address: string
+  latitude: number
+  longitude: number
+  type: "futbol" | "futbol_5" | "futbol_7" | "futbol_11"
+  surface: "cesped_natural" | "cesped_sintetico" | "concreto" | "tierra"
+  lights: boolean
+  parking: boolean
+  pricePerHour: number
+  rating: number
+  image?: string
+  facilities: string[]
+  availability: {
+    day: string
+    timeSlots: {
+      start: string
+      end: string
+      available: boolean
+      price?: number
+    }[]
+  }[]
+}
+
+export interface Reta {
+  id: string
+  courtId: string
+  courtName: string
+  courtAddress: string
+  organizerId: string
+  organizerName: string
+  organizerAvatar?: string
+  title: string
+  description: string
+  date: string
+  startTime: string
+  endTime: string
+  maxPlayers: number
+  currentPlayers: number
+  players: {
+    id: string
+    name: string
+    avatar?: string
+    position?: "GK" | "DEF" | "MID" | "FWD"
+    skillLevel: "beginner" | "intermediate" | "advanced" | "professional"
+  }[]
+  skillLevel: "beginner" | "intermediate" | "advanced" | "professional"
+  price: number
+  status: "open" | "full" | "started" | "completed" | "cancelled"
+  rules: string[]
+  equipment: string[]
+  notes?: string
+  latitude: number
+  longitude: number
+}
+
+// Mock data de canchas
+export const mockCourts: Court[] = [
+  {
+    id: "court1",
+    name: "Cancha Los Olivos",
+    address: "Av. Francisco I. Madero 123, Ciudad Victoria, Tamaulipas",
+    latitude: 23.7500,
+    longitude: -99.1400,
+    type: "futbol_5",
+    surface: "cesped_sintetico",
+    lights: true,
+    parking: true,
+    pricePerHour: 80,
+    rating: 4.5,
+    image: "https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=400&h=300&fit=crop",
+    facilities: ["Vestuarios", "Baños", "Estacionamiento", "Tienda"],
+    availability: [
+      {
+        day: "Lunes",
+        timeSlots: [
+          { start: "08:00", end: "09:00", available: true, price: 80 },
+          { start: "09:00", end: "10:00", available: false },
+          { start: "10:00", end: "11:00", available: true, price: 80 },
+          { start: "11:00", end: "12:00", available: true, price: 80 },
+          { start: "12:00", end: "13:00", available: false },
+          { start: "13:00", end: "14:00", available: true, price: 80 },
+          { start: "14:00", end: "15:00", available: true, price: 80 },
+          { start: "15:00", end: "16:00", available: true, price: 80 },
+          { start: "16:00", end: "17:00", available: true, price: 80 },
+          { start: "17:00", end: "18:00", available: false },
+          { start: "18:00", end: "19:00", available: true, price: 100 },
+          { start: "19:00", end: "20:00", available: true, price: 100 },
+          { start: "20:00", end: "21:00", available: true, price: 100 },
+          { start: "21:00", end: "22:00", available: true, price: 100 }
+        ]
+      },
+      {
+        day: "Martes",
+        timeSlots: [
+          { start: "08:00", end: "09:00", available: true, price: 80 },
+          { start: "09:00", end: "10:00", available: true, price: 80 },
+          { start: "10:00", end: "11:00", available: true, price: 80 },
+          { start: "11:00", end: "12:00", available: true, price: 80 },
+          { start: "12:00", end: "13:00", available: true, price: 80 },
+          { start: "13:00", end: "14:00", available: true, price: 80 },
+          { start: "14:00", end: "15:00", available: true, price: 80 },
+          { start: "15:00", end: "16:00", available: true, price: 80 },
+          { start: "16:00", end: "17:00", available: true, price: 80 },
+          { start: "17:00", end: "18:00", available: true, price: 80 },
+          { start: "18:00", end: "19:00", available: true, price: 100 },
+          { start: "19:00", end: "20:00", available: true, price: 100 },
+          { start: "20:00", end: "21:00", available: true, price: 100 },
+          { start: "21:00", end: "22:00", available: true, price: 100 }
+        ]
+      }
+    ]
+  },
+  {
+    id: "court2",
+    name: "Complejo Deportivo San Miguel",
+    address: "Calle Hidalgo 456, Ciudad Victoria, Tamaulipas",
+    latitude: 23.7300,
+    longitude: -99.1500,
+    type: "futbol_7",
+    surface: "cesped_natural",
+    lights: true,
+    parking: true,
+    pricePerHour: 120,
+    rating: 4.8,
+    image: "https://images.unsplash.com/photo-1553778263-73a83bab9b0c?w=400&h=300&fit=crop",
+    facilities: ["Vestuarios", "Baños", "Estacionamiento", "Restaurante", "Gimnasio"],
+    availability: [
+      {
+        day: "Lunes",
+        timeSlots: [
+          { start: "08:00", end: "09:00", available: true, price: 120 },
+          { start: "09:00", end: "10:00", available: true, price: 120 },
+          { start: "10:00", end: "11:00", available: true, price: 120 },
+          { start: "11:00", end: "12:00", available: true, price: 120 },
+          { start: "12:00", end: "13:00", available: true, price: 120 },
+          { start: "13:00", end: "14:00", available: true, price: 120 },
+          { start: "14:00", end: "15:00", available: true, price: 120 },
+          { start: "15:00", end: "16:00", available: true, price: 120 },
+          { start: "16:00", end: "17:00", available: true, price: 120 },
+          { start: "17:00", end: "18:00", available: true, price: 120 },
+          { start: "18:00", end: "19:00", available: true, price: 150 },
+          { start: "19:00", end: "20:00", available: true, price: 150 },
+          { start: "20:00", end: "21:00", available: true, price: 150 },
+          { start: "21:00", end: "22:00", available: true, price: 150 }
+        ]
+      }
+    ]
+  },
+  {
+    id: "court3",
+    name: "Campo Deportivo Miraflores",
+    address: "Av. Universidad 789, Ciudad Victoria, Tamaulipas",
+    latitude: 23.7200,
+    longitude: -99.1300,
+    type: "futbol_11",
+    surface: "cesped_sintetico",
+    lights: true,
+    parking: false,
+    pricePerHour: 200,
+    rating: 4.2,
+    image: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&h=300&fit=crop",
+    facilities: ["Vestuarios", "Baños", "Tienda"],
+    availability: [
+      {
+        day: "Lunes",
+        timeSlots: [
+          { start: "08:00", end: "09:00", available: true, price: 200 },
+          { start: "09:00", end: "10:00", available: true, price: 200 },
+          { start: "10:00", end: "11:00", available: true, price: 200 },
+          { start: "11:00", end: "12:00", available: true, price: 200 },
+          { start: "12:00", end: "13:00", available: true, price: 200 },
+          { start: "13:00", end: "14:00", available: true, price: 200 },
+          { start: "14:00", end: "15:00", available: true, price: 200 },
+          { start: "15:00", end: "16:00", available: true, price: 200 },
+          { start: "16:00", end: "17:00", available: true, price: 200 },
+          { start: "17:00", end: "18:00", available: true, price: 200 },
+          { start: "18:00", end: "19:00", available: true, price: 250 },
+          { start: "19:00", end: "20:00", available: true, price: 250 },
+          { start: "20:00", end: "21:00", available: true, price: 250 },
+          { start: "21:00", end: "22:00", available: true, price: 250 }
+        ]
+      }
+    ]
+  },
+  {
+    id: "court4",
+    name: "Cancha El Prado",
+    address: "Calle Morelos 321, Ciudad Victoria, Tamaulipas",
+    latitude: 23.7600,
+    longitude: -99.1600,
+    type: "futbol_5",
+    surface: "concreto",
+    lights: false,
+    parking: true,
+    pricePerHour: 50,
+    rating: 3.8,
+    image: "https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=400&h=300&fit=crop",
+    facilities: ["Vestuarios", "Baños", "Estacionamiento"],
+    availability: [
+      {
+        day: "Lunes",
+        timeSlots: [
+          { start: "08:00", end: "09:00", available: true, price: 50 },
+          { start: "09:00", end: "10:00", available: true, price: 50 },
+          { start: "10:00", end: "11:00", available: true, price: 50 },
+          { start: "11:00", end: "12:00", available: true, price: 50 },
+          { start: "12:00", end: "13:00", available: true, price: 50 },
+          { start: "13:00", end: "14:00", available: true, price: 50 },
+          { start: "14:00", end: "15:00", available: true, price: 50 },
+          { start: "15:00", end: "16:00", available: true, price: 50 },
+          { start: "16:00", end: "17:00", available: true, price: 50 },
+          { start: "17:00", end: "18:00", available: true, price: 50 }
+        ]
+      }
+    ]
+  }
+]
+
+// Mock data de retas
+export const mockRetas: Reta[] = [
+  {
+    id: "reta1",
+    courtId: "court1",
+    courtName: "Cancha Los Olivos",
+    courtAddress: "Av. Francisco I. Madero 123, Ciudad Victoria, Tamaulipas",
+    organizerId: "user1",
+    organizerName: "Carlos Rodríguez",
+    organizerAvatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
+    title: "Reta de Fútbol 5 - Nivel Intermedio",
+    description: "Partido amistoso para jugadores de nivel intermedio. Ambiente relajado y buen fútbol.",
+    date: "2024-03-22",
+    startTime: "19:00",
+    endTime: "21:00",
+    maxPlayers: 10,
+    currentPlayers: 7,
+    players: [
+      {
+        id: "user1",
+        name: "Carlos Rodríguez",
+        avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
+        position: "MID",
+        skillLevel: "intermediate"
+      },
+      {
+        id: "user2",
+        name: "María González",
+        avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face",
+        position: "FWD",
+        skillLevel: "intermediate"
+      },
+      {
+        id: "user3",
+        name: "Luis Martínez",
+        avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face",
+        position: "DEF",
+        skillLevel: "intermediate"
+      },
+      {
+        id: "user4",
+        name: "Ana López",
+        avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face",
+        position: "GK",
+        skillLevel: "intermediate"
+      },
+      {
+        id: "user5",
+        name: "Pedro Sánchez",
+        avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop&crop=face",
+        position: "MID",
+        skillLevel: "intermediate"
+      },
+      {
+        id: "user6",
+        name: "Laura Torres",
+        avatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&h=150&fit=crop&crop=face",
+        position: "FWD",
+        skillLevel: "intermediate"
+      },
+      {
+        id: "user7",
+        name: "Diego Ramos",
+        avatar: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=150&h=150&fit=crop&crop=face",
+        position: "DEF",
+        skillLevel: "intermediate"
+      }
+    ],
+    skillLevel: "intermediate",
+    price: 15,
+    status: "open",
+    rules: [
+      "Respeto entre jugadores",
+      "No faltas bruscas",
+      "Llegar 10 minutos antes",
+      "Traer ropa deportiva"
+    ],
+    equipment: ["Pelota", "Conos", "Silbato"],
+    notes: "Se proporcionará agua y fruta después del partido",
+    latitude: 23.7500,
+    longitude: -99.1400
+  },
+  {
+    id: "reta2",
+    courtId: "court2",
+    courtName: "Complejo Deportivo San Miguel",
+    courtAddress: "Calle Hidalgo 456, Ciudad Victoria, Tamaulipas",
+    organizerId: "user8",
+    organizerName: "Miguel Torres",
+    organizerAvatar: "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=150&h=150&fit=crop&crop=face",
+    title: "Reta Fútbol 7 - Nivel Avanzado",
+    description: "Partido para jugadores con experiencia. Intensidad alta y buen nivel técnico.",
+    date: "2024-03-23",
+    startTime: "18:00",
+    endTime: "20:00",
+    maxPlayers: 14,
+    currentPlayers: 12,
+    players: [
+      {
+        id: "user8",
+        name: "Miguel Torres",
+        avatar: "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=150&h=150&fit=crop&crop=face",
+        position: "GK",
+        skillLevel: "advanced"
+      },
+      {
+        id: "user9",
+        name: "Sofia Morales",
+        avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&h=150&fit=crop&crop=face",
+        position: "DEF",
+        skillLevel: "advanced"
+      },
+      {
+        id: "user10",
+        name: "Roberto Silva",
+        avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face",
+        position: "MID",
+        skillLevel: "advanced"
+      },
+      {
+        id: "user11",
+        name: "Carmen Ruiz",
+        avatar: "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=150&h=150&fit=crop&crop=face",
+        position: "FWD",
+        skillLevel: "advanced"
+      },
+      {
+        id: "user12",
+        name: "Fernando López",
+        avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
+        position: "DEF",
+        skillLevel: "advanced"
+      },
+      {
+        id: "user13",
+        name: "Patricia Vega",
+        avatar: "https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?w=150&h=150&fit=crop&crop=face",
+        position: "MID",
+        skillLevel: "advanced"
+      },
+      {
+        id: "user14",
+        name: "Alejandro Castro",
+        avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop&crop=face",
+        position: "FWD",
+        skillLevel: "advanced"
+      },
+      {
+        id: "user15",
+        name: "Valeria Herrera",
+        avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face",
+        position: "DEF",
+        skillLevel: "advanced"
+      },
+      {
+        id: "user16",
+        name: "Ricardo Mendez",
+        avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face",
+        position: "MID",
+        skillLevel: "advanced"
+      },
+      {
+        id: "user17",
+        name: "Gabriela Flores",
+        avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face",
+        position: "FWD",
+        skillLevel: "advanced"
+      },
+      {
+        id: "user18",
+        name: "Hector Jimenez",
+        avatar: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=150&h=150&fit=crop&crop=face",
+        position: "DEF",
+        skillLevel: "advanced"
+      },
+      {
+        id: "user19",
+        name: "Monica Rojas",
+        avatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&h=150&fit=crop&crop=face",
+        position: "MID",
+        skillLevel: "advanced"
+      }
+    ],
+    skillLevel: "advanced",
+    price: 25,
+    status: "open",
+    rules: [
+      "Nivel avanzado requerido",
+      "Puntualidad obligatoria",
+      "Equipamiento completo",
+      "Actitud deportiva"
+    ],
+    equipment: ["Pelota", "Conos", "Silbato", "Chalecos"],
+    notes: "Partido competitivo, se requiere experiencia",
+    latitude: 23.7300,
+    longitude: -99.1500
+  },
+  {
+    id: "reta3",
+    courtId: "court3",
+    courtName: "Campo Deportivo Miraflores",
+    courtAddress: "Av. Universidad 789, Ciudad Victoria, Tamaulipas",
+    organizerId: "user20",
+    organizerName: "Javier Mendoza",
+    organizerAvatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
+    title: "Reta Fútbol 11 - Todos los Niveles",
+    description: "Partido inclusivo para jugadores de todos los niveles. Ambiente amigable y divertido.",
+    date: "2024-03-24",
+    startTime: "16:00",
+    endTime: "18:00",
+    maxPlayers: 22,
+    currentPlayers: 18,
+    players: [
+      {
+        id: "user20",
+        name: "Javier Mendoza",
+        avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
+        position: "GK",
+        skillLevel: "intermediate"
+      },
+      {
+        id: "user21",
+        name: "Elena Vargas",
+        avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face",
+        position: "DEF",
+        skillLevel: "beginner"
+      },
+      {
+        id: "user22",
+        name: "Oscar Paredes",
+        avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face",
+        position: "MID",
+        skillLevel: "intermediate"
+      },
+      {
+        id: "user23",
+        name: "Rosa Aguilar",
+        avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face",
+        position: "FWD",
+        skillLevel: "beginner"
+      },
+      {
+        id: "user24",
+        name: "Mario Castillo",
+        avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop&crop=face",
+        position: "DEF",
+        skillLevel: "advanced"
+      },
+      {
+        id: "user25",
+        name: "Isabel Moreno",
+        avatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&h=150&fit=crop&crop=face",
+        position: "MID",
+        skillLevel: "intermediate"
+      },
+      {
+        id: "user26",
+        name: "Cesar Delgado",
+        avatar: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=150&h=150&fit=crop&crop=face",
+        position: "FWD",
+        skillLevel: "beginner"
+      },
+      {
+        id: "user27",
+        name: "Lucia Espinoza",
+        avatar: "https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?w=150&h=150&fit=crop&crop=face",
+        position: "DEF",
+        skillLevel: "intermediate"
+      },
+      {
+        id: "user28",
+        name: "Andres Rios",
+        avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
+        position: "MID",
+        skillLevel: "beginner"
+      },
+      {
+        id: "user29",
+        name: "Natalia Chavez",
+        avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&h=150&fit=crop&crop=face",
+        position: "FWD",
+        skillLevel: "intermediate"
+      },
+      {
+        id: "user30",
+        name: "Pablo Gutierrez",
+        avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face",
+        position: "DEF",
+        skillLevel: "advanced"
+      },
+      {
+        id: "user31",
+        name: "Andrea Salazar",
+        avatar: "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=150&h=150&fit=crop&crop=face",
+        position: "MID",
+        skillLevel: "beginner"
+      },
+      {
+        id: "user32",
+        name: "Raul Navarro",
+        avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop&crop=face",
+        position: "FWD",
+        skillLevel: "intermediate"
+      },
+      {
+        id: "user33",
+        name: "Claudia Ramos",
+        avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face",
+        position: "DEF",
+        skillLevel: "beginner"
+      },
+      {
+        id: "user34",
+        name: "Gonzalo Fuentes",
+        avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
+        position: "MID",
+        skillLevel: "advanced"
+      },
+      {
+        id: "user35",
+        name: "Paola Medina",
+        avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face",
+        position: "FWD",
+        skillLevel: "intermediate"
+      },
+      {
+        id: "user36",
+        name: "Sebastian Cruz",
+        avatar: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=150&h=150&fit=crop&crop=face",
+        position: "DEF",
+        skillLevel: "beginner"
+      },
+      {
+        id: "user37",
+        name: "Daniela Ortiz",
+        avatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&h=150&fit=crop&crop=face",
+        position: "MID",
+        skillLevel: "intermediate"
+      }
+    ],
+    skillLevel: "beginner",
+    price: 20,
+    status: "open",
+    rules: [
+      "Todos los niveles bienvenidos",
+      "Respeto mutuo",
+      "Diversión ante todo",
+      "Llegar puntual"
+    ],
+    equipment: ["Pelota", "Conos", "Silbato", "Chalecos"],
+    notes: "Partido amigable, perfecto para principiantes",
+    latitude: 23.7200,
+    longitude: -99.1300
+  },
+  {
+    id: "reta4",
+    courtId: "court4",
+    courtName: "Cancha El Prado",
+    courtAddress: "Calle Morelos 321, Ciudad Victoria, Tamaulipas",
+    organizerId: "user38",
+    organizerName: "Teresa Morales",
+    organizerAvatar: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face",
+    title: "Reta Fútbol 5 - Principiantes",
+    description: "Ideal para quienes están empezando a jugar fútbol. Ambiente de aprendizaje y diversión.",
+    date: "2024-03-25",
+    startTime: "15:00",
+    endTime: "17:00",
+    maxPlayers: 10,
+    currentPlayers: 6,
+    players: [
+      {
+        id: "user38",
+        name: "Teresa Morales",
+        avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face",
+        position: "GK",
+        skillLevel: "beginner"
+      },
+      {
+        id: "user39",
+        name: "Carlos Huerta",
+        avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face",
+        position: "DEF",
+        skillLevel: "beginner"
+      },
+      {
+        id: "user40",
+        name: "Mariana Silva",
+        avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face",
+        position: "MID",
+        skillLevel: "beginner"
+      },
+      {
+        id: "user41",
+        name: "Jorge Ponce",
+        avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
+        position: "FWD",
+        skillLevel: "beginner"
+      },
+      {
+        id: "user42",
+        name: "Silvia Rojas",
+        avatar: "https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?w=150&h=150&fit=crop&crop=face",
+        position: "DEF",
+        skillLevel: "beginner"
+      },
+      {
+        id: "user43",
+        name: "Roberto Vega",
+        avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop&crop=face",
+        position: "MID",
+        skillLevel: "beginner"
+      }
+    ],
+    skillLevel: "beginner",
+    price: 8,
+    status: "open",
+    rules: [
+      "Nivel principiante",
+      "Paciencia con todos",
+      "Aprender divirtiéndose",
+      "No presionar"
+    ],
+    equipment: ["Pelota", "Conos"],
+    notes: "Perfecto para aprender y hacer amigos",
+    latitude: 23.7600,
+    longitude: -99.1600
+  }
+]
